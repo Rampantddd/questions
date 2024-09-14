@@ -1,30 +1,42 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts" setup>
+import {ref} from "vue";
+import Son from "./components/son.vue";
+import Bother from "./components/bother.vue";
+
+window.addEventListener("scroll", () => {
+  debounceScroll(123)
+})
+
+const debounce = <A extends any[], R>(fn: (...arg: A) => R, delay?: number): (...arg: A) => void => {
+  let timer: number | null = null
+  return function (...arg: A) {
+    if (timer) {
+      clearInterval(timer)
+    }
+    timer = setTimeout(() => fn(...arg), delay)
+  }
+}
+
+const bodyScroll = (num: number) => {
+  console.log(document.body.scrollTop || document.documentElement.scrollTop)
+  console.log("数字:" + num)
+}
+
+const debounceScroll = debounce(bodyScroll, 1000)
+
+const mes = ref('my child')
+
+const update = (res: string) => {
+  console.log(res);
+}
+
 </script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <son v-model="mes" @update:model-value="update"></son>
+  <bother></bother>
 </template>
-
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+ul li {
+  height: 100px;
 }
 </style>
